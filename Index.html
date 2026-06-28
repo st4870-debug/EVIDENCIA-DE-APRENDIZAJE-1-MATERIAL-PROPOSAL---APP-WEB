@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B1 Academic Laboratory: Modal Verbs Mastery</title>
+    <style>
+        :root {
+            --primary: #0f172a;
+            --accent: #6366f1;
+            --accent-hover: #4f46e5;
+            --success: #10b981;
+            --error: #f43f5e;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            margin: 0; padding: 0;
+            line-height: 1.5;
+        }
+
+        /* Login Overlay Style */
+        #login-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 9999;
+        }
+
+        .login-box {
+            background: var(--card-bg);
+            padding: 3.5rem; border-radius: 24px; text-align: center;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); max-width: 420px; width: 90%;
+        }
+
+        /* Header Layout */
+        header { 
+            background: linear-gradient(135deg, var(--primary) 0%, #1e293b 100%); 
+            color: white; text-align: center; padding: 4rem 1rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        }
+        header h1 { margin: 0; font-size: 2.5rem; font-weight: 800; letter-spacing: -0.025em; }
+        header p { margin: 0.75rem 0 0 0; font-size: 1.15rem; color: #94a3b8; font-weight: 400; }
+
+        .container { max-width: 800px; margin: -2.5rem auto 5rem auto; padding: 0 1.5rem; }
+        
+        .user-badge { 
+            background: var(--card-bg); padding: 0.75rem 1.5rem; border-radius: 9999px; 
+            display: inline-flex; align-items: center; gap: 8px; font-weight: 600; 
+            color: var(--accent); margin-bottom: 2rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
+        }
+
+        /* Section Layouts */
+        .section { 
+            background: var(--card-bg); border-radius: 20px; padding: 3rem; 
+            margin-bottom: 2.5rem; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.02), 0 4px 6px -4px rgba(0,0,0,0.02); 
+            border: 1px solid var(--border); transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+        .section h2 { margin-top: 0; font-size: 1.5rem; font-weight: 700; color: var(--primary); display: flex; align-items: center; gap: 10px; }
+        .section.locked { opacity: 0.4; pointer-events: none; background: #f1f5f9; border: 2px dashed #cbd5e1; transform: scale(0.99); }
+
+        .instruction-box { background: #f0fdfa; border-left: 4px solid var(--success); padding: 1.25rem; border-radius: 12px; margin-bottom: 2rem; font-size: 0.95rem; color: #115e59; font-weight: 500; }
+        .question-block { background: #ffffff; padding: 1.5rem; border-radius: 14px; margin-bottom: 1.5rem; border: 1px solid var(--border); transition: all 0.2s ease; }
+        .question-block:hover { border-color: #cbd5e1; box-shadow: 0 4px 12px rgba(0,0,0,0.01); }
+        
+        /* Interactive Buttons */
+        .options-stack { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1rem; }
+        .option-btn { 
+            background: var(--card-bg); border: 1px solid var(--border); padding: 1rem 1.25rem; 
+            border-radius: 10px; cursor: pointer; text-align: left; transition: all 0.2s ease; 
+            font-size: 0.95rem; color: var(--text-main); font-weight: 500;
+        }
+        .option-btn:hover { background: #f8fafc; border-color: #cbd5e1; }
+        .option-btn.selected { border-color: var(--accent); background: #f5f3ff; color: #4338ca; font-weight: 600; box-shadow: 0 0 0 1px #4338ca; }
+        .option-btn:disabled { pointer-events: none; opacity: 0.6; }
+
+        /* Media Control Hub */
+        .audio-container { 
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); color: white; 
+            padding: 2.5rem; border-radius: 20px; text-align: center; margin-bottom: 2.5rem;
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); border: 1px solid rgba(255,255,255,0.05);
+            transition: opacity 0.3s ease;
+        }
+        .audio-instruction { background: rgba(255,255,255,0.07); padding: 1rem; border-radius: 10px; font-size: 0.95rem; margin-bottom: 1.5rem; color: #cbd5e1; line-height: 1.6; max-width: 600px; margin-left: auto; margin-right: auto; border-left: 3px solid var(--accent); }
+
+        .btn { background: var(--accent); color: white; border: none; padding: 0.85rem 2.25rem; font-size: 1rem; border-radius: 12px; cursor: pointer; font-weight: 600; transition: all 0.2s ease; }
+        .btn:hover { background: var(--accent-hover); transform: translateY(-1px); }
+        .btn:disabled { background: var(--text-muted); cursor: not-allowed; transform: none; opacity: 0.5; }
+        .btn-action { margin-top: 1.5rem; width: 100%; padding: 1rem; font-size: 1.05rem; }
+
+        /* Estilo específico para el botón de reproducción de audio */
+        #play-btn {
+            background-color: #475569;
+            pointer-events: none;
+            opacity: 0.6;
+            transition: all 0.3s ease;
+        }
+        #play-btn.ready {
+            background-color: var(--accent) !important;
+            pointer-events: auto !important;
+            opacity: 1 !important;
+            cursor: pointer;
+        }
+        #play-btn.ready:hover {
+            background-color: var(--accent-hover) !important;
+            transform: scale(1.03);
+        }
+
+        select { padding: 0.5rem 2rem 0.5rem 0.75rem; font-size: 0.95rem; border: 1px solid var(--border); border-radius: 8px; background: #f8fafc; color: var(--text-main); font-weight: 600; cursor: pointer; }
+        select:focus { outline: none; border-color: var(--accent); }
+
+        /* Dashboard Results Layout */
+        #results-dashboard { display: none; background: var(--card-bg); border-radius: 24px; padding: 3.5rem; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.08); border: 1px solid var(--border); margin-top: 2rem; }
+        .dashboard-section { border-top: 1px solid var(--border); padding-top: 2.5rem; margin-top: 3rem; }
+        
+        .feedback-item { background: #fff; border: 1px solid var(--border); padding: 1.25rem; border-radius: 12px; margin-bottom: 1.25rem; border-left: 5px solid var(--error); box-shadow: 0 2px 4px rgba(0,0,0,0.01); }
+        .feedback-item.good { border-left-color: var(--success); }
+        
+        .review-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem; margin-top: 1.5rem; }
+        .review-item { background: #f8fafc; padding: 1.5rem; border-radius: 14px; border: 1px solid var(--border); font-size: 0.95rem; }
+        
+        .speak-btn { background: #eef2ff; color: var(--accent); border: none; padding: 0.4rem 0.75rem; border-radius: 8px; font-size: 0.85rem; cursor: pointer; font-weight: 600; transition: all 0.2s ease; display: inline-flex; align-items: center; gap: 4px; margin-top: 0.5rem; }
+        .speak-btn:hover { background: var(--accent); color: white; }
+        footer { text-align: center; color: var(--text-muted); padding: 3rem 1rem; font-size: 0.875rem; }
+    </style>
+</head>
+<body>
+
+    <div id="login-overlay">
+        <div class="login-box">
+            <h2 style="color: var(--primary); margin: 0 0 0.5rem 0; font-size: 1.75rem; font-weight: 800;">B1 English Lab</h2>
+            <p style="color: var(--text-muted); margin-bottom: 2rem;">Enter your name to start the test</p>
+            <input type="text" id="username-input" placeholder="Your Full Name..." style="padding: 1rem; text-align: center; width: 100%; border-radius:12px; border:1px solid var(--border); font-size: 1rem; box-sizing: border-box; margin-bottom: 1.5rem;">
+            <button class="btn" style="width: 100%; padding: 1rem;" onclick="startLab()">Begin Test</button>
+        </div>
+    </div>
+
+    <header>
+        <h1>Modal Verbs Mastery</h1>
+        <p>Advanced Diagnostics Assessment • Level B1 Standard</p>
+    </header>
+
+    <div class="container" id="main-lab-container">
+        <div class="user-badge" id="student-badge">👤 Student: Guest</div>
+
+        <div class="section" id="sec-before">
+            <h2>🧠 Phase 1: Before Listening</h2>
+            <div class="instruction-box"><strong>Instructions:</strong> Read the questions carefully and choose the correct option. Click the button at the bottom to save your answers and unlock the audio.</div>
+
+            <div class="question-block" id="block-bl1">
+                <p style="margin-top:0; font-weight:600;">1. Which option explicitly denotes that an action is completely optional and implies a lack of necessity?</p>
+                <div class="options-stack" id="opts-bl1">
+                    <button class="option-btn" onclick="selectBL(1, 'mustn\'t', this)">You mustn't bring a laptop.</button>
+                    <button class="option-btn" onclick="selectBL(1, 'don\'t have to', this)">You don't have to bring a laptop.</button>
+                    <button class="option-btn" onclick="selectBL(1, 'shouldn\'t', this)">You shouldn't bring a laptop.</button>
+                </div>
+            </div>
+
+            <div class="question-block" id="block-bl2">
+                <p style="margin-top:0; font-weight:600;">2. Select the optimal architectural layout to present a highly formal and polite authorization request:</p>
+                <div class="options-stack" id="opts-bl2">
+                    <button class="option-btn" onclick="selectBL(2, 'may', this)">May I examine the results, professor?</button>
+                    <button class="option-btn" onclick="selectBL(2, 'must', this)">Must I examine the results, professor?</button>
+                    <button class="option-btn" onclick="selectBL(2, 'should', this)">Should I examine the results, professor?</button>
+                </div>
+            </div>
+
+            <div class="question-block" id="block-bl3">
+                <p style="margin-top:0; font-weight:600;">3. Isolate the token deployed to represent a consolidated past ability that no longer exists:</p>
+                <div class="options-stack" id="opts-bl3">
+                    <button class="option-btn" onclick="selectBL(3, 'can', this)">She can play the violin beautifully when she was seven.</button>
+                    <button class="option-btn" onclick="selectBL(3, 'could', this)">She could play the violin beautifully when she was seven.</button>
+                    <button class="option-btn" onclick="selectBL(3, 'might', this)">She might play the violin beautifully when she was seven.</button>
+                </div>
+            </div>
+
+            <div class="question-block" id="block-bl4">
+                <p style="margin-top:0; font-weight:600;">4. Identify the modal that represents a logical deduction of absolute certainty (100% true) based on objective facts:</p>
+                <div class="options-stack" id="opts-bl4">
+                    <button class="option-btn" onclick="selectBL(4, 'might', this)">He has three sports cars. He might be rich.</button>
+                    <button class="option-btn" onclick="selectBL(4, 'must', this)">He has three sports cars. He must be rich.</button>
+                    <button class="option-btn" onclick="selectBL(4, 'can', this)">He has three sports cars. He can be rich.</button>
+                </div>
+            </div>
+
+            <div class="question-block" id="block-bl5">
+                <p style="margin-top:0; font-weight:600;">5. Isolate the structure designed for severe obligations enforced by external institutional rules or legal parameters:</p>
+                <div class="options-stack" id="opts-bl5">
+                    <button class="option-btn" onclick="selectBL(5, 'should', this)">Students should wear uniforms on Mondays.</button>
+                    <button class="option-btn" onclick="selectBL(5, 'have to', this)">Students have to wear uniforms on Mondays due to school laws.</button>
+                    <button class="option-btn" onclick="selectBL(5, 'may', this)">Students may wear uniforms on Mondays.</button>
+                </div>
+            </div>
+
+            <div class="question-block" id="block-bl6">
+                <p style="margin-top:0; font-weight:600;">6. Choose the exact token intended to provide a constructive, safe, and non-binding recommendation to a peer:</p>
+                <div class="options-stack" id="opts-bl6">
+                    <button class="option-btn" onclick="selectBL(6, 'must', this)">You must try the new bakery downtown.</button>
+                    <button class="option-btn" onclick="selectBL(6, 'should', this)">You should try the new bakery downtown; it's great.</button>
+                    <button class="option-btn" onclick="selectBL(6, 'have to', this)">You have to try the new bakery downtown.</button>
+                </div>
+            </div>
+
+            <button class="btn btn-action" id="btn-validate-p1" onclick="checkBefore()">Submit & Unlock Audio Station</button>
+        </div>
+
+        <div class="audio-container" id="audio-hub" style="opacity: 0.3; pointer-events: none;">
+            <div class="audio-instruction">
+                You are going to listen to a voice message from Sarah, a university student. answer the questions correctly.
+            </div>
+            <button class="btn" id="play-btn" onclick="playAudio()">▶ Play Audio</button>
+        </div>
+
+        <div class="section locked" id="sec-while">
+            <h2>👂 Phase 2: While Listening</h2>
+            <div class="instruction-box"><strong>Instructions:</strong> Listen to the audio carefully and select the exact modal verb that you hear in each sentence.</div>
+
+            <div class="question-block" id="block-wl1"><p style="margin:0;"><strong>Gap 1:</strong> "Hey! You look so tired lately, you <select id="wl-q1"><option value="">-select-</option><option value="should">should</option><option value="must">must</option></select> definitely go to bed early tonight."</p></div>
+            <div class="question-block" id="block-wl2"><p style="margin:0;"><strong>Gap 2:</strong> "As for me, I <select id="wl-q2"><option value="">-select-</option><option value="have to">have to</option><option value="might">might</option></select> finish my university report right now."</p></div>
+            <div class="question-block" id="block-wl3"><p style="margin:0;"><strong>Gap 3:</strong> "I <select id="wl-q3"><option value="">-select-</option><option value="must">must</option><option value="could">could</option></select> help you yesterday with your math tasks, but today I am completely busy."</p></div>
+            <div class="question-block" id="block-wl4"><p style="margin:0;"><strong>Gap 4:</strong> "Be very careful with your code, because you <select id="wl-q4"><option value="">-select-</option><option value="might">might</option><option value="can">can</option></select> make structural mistakes due to exhaustion."</p></div>
+            <div class="question-block" id="block-wl5"><p style="margin:0;"><strong>Gap 5:</strong> "Seriously, you <select id="wl-q5"><option value="">-select-</option><option value="mustn't">mustn't</option><option value="shouldn't">shouldn't</option></select> drink more coffee today, it is dangerous for your heart."</p></div>
+            <div class="question-block" id="block-wl6"><p style="margin:0;"><strong>Gap 6:</strong> "Anyway, you <select id="wl-q6"><option value="">-select-</option><option value="don't have to">don't have to</option><option value="can't">can't</option></select> ask for permission to use my laptop. Just grab it!"</p></div>
+            
+            <div class="question-block" id="block-wl7"><p style="margin:0;"><strong>Gap 7:</strong> "Oh, remember that tomorrow we <select id="wl-q7"><option value="">-select-</option><option value="have to">have to</option><option value="ought to">ought to</option></select> submit the project files before 8:00 AM."</p></div>
+            <div class="question-block" id="block-wl8"><p style="margin:0;"><strong>Gap 8:</strong> "Professor Davis told us that we <select id="wl-q8"><option value="">-select-</option><option value="mustn't">mustn't</option><option value="don't have to">don't have to</option></select> be late under any circumstance."</p></div>
+            <div class="question-block" id="block-wl9"><p style="margin:0;"><strong>Gap 9:</strong> "I think we <select id="wl-q9"><option value="">-select-</option><option value="should">should</option><option value="may">may</option></select> double-check the bibliography just in case."</p></div>
+
+            <button class="btn btn-action" id="btn-validate-p2" onclick="checkWhile()">Submit & Unlock Phase 3</button>
+        </div>
+
+        <div class="section locked" id="sec-after">
+            <h2>🚀 Phase 3: After Listening</h2>
+            <div class="instruction-box"><strong>Instructions:</strong> Look at the options below. Two options contain grammar or spelling mistakes. Select the ONE option that is completely correct.</div>
+
+            <div class="question-block" id="block-al1">
+                <p style="margin-top:0; font-weight:600;">1. Choose the grammatically CORRECT sentence using the modal verb <code>SHOULD</code>:</p>
+                <div class="options-stack" id="opts-al1">
+                    <button class="option-btn" onclick="selectAL(1, 'A', this)">A) The manager believes you should to advise the team tomorrow morning.</button>
+                    <button class="option-btn" onclick="selectAL(1, 'B', this)">B) Your professor thinks you shoud studyies more hours for the final evaluation.</button>
+                    <button class="option-btn" onclick="selectAL(1, 'C', this)">C) If you want to improve your fluency, you should practice speaking every single day.</button>
+                </div>
+            </div>
+
+            <div class="question-block" id="block-al2">
+                <p style="margin-top:0; font-weight:600;">2. Choose the grammatically CORRECT sentence using the modal verb <code>MUSTN'T</code>:</p>
+                <div class="options-stack" id="opts-al2">
+                    <button class="option-btn" onclick="selectAL(2, 'A', this)">A) Students mustn't smoke inside the facility; it is strictly prohibited by law.</button>
+                    <button class="option-btn" onclick="selectAL(2, 'B', this)">B) Employees mustnot to enter the laboratory room without their security badges.</button>
+                    <button class="option-btn" onclick="selectAL(2, 'C', this)">C) He mustn't parks his commercial vehicle in front of the emergency gates.</button>
+                </div>
+            </div>
+
+            <div class="question-block" id="block-al3">
+                <p style="margin-top:0; font-weight:600;">3. Choose the grammatically CORRECT sentence using the modal verb <code>MIGHT</code>:</p>
+                <div class="options-stack" id="opts-al3">
+                    <button class="option-btn" onclick="selectAL(3, 'A', this)">A) Our teacher migt explains the complex passive voice rules during the next session.</button>
+                    <button class="option-btn" onclick="selectAL(3, 'B', this)">B) Don't leave your umbrella at home because it might rain later this afternoon.</button>
+                    <button class="option-btn" onclick="selectAL(3, 'C', this)">C) They might to travel to London next month if they obtain their visas on time.</button>
+                </div>
+            </div>
+
+            <button class="btn btn-action" id="btn-submit-p3" onclick="submitPhaseThree()">Finish Test & Get Results</button>
+            <button class="btn btn-action" id="btn-dashboard-trigger" style="background-color: var(--success); display: none;" onclick="goToDashboard()">Go to Results Dashboard →</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div id="results-dashboard">
+            <div style="text-align: center; padding-bottom: 2rem;">
+                <h2 style="color: var(--primary); margin: 0; font-weight: 800; font-size: 2rem;">Results Dashboard</h2>
+                <p style="font-size: 1.1rem; color: var(--text-muted); margin-top: 0.5rem;" id="res-student-name"><strong>Student:</strong> </p>
+                <h3 style="font-size: 3.5rem; color: var(--success); margin: 1rem 0; font-weight: 800;" id="res-score">0 / 18</h3>
+                <p style="color: var(--text-muted); font-size: 0.95rem; max-width:500px; margin:0 auto;">Your answers are now frozen. Check your score and corrections below.</p>
+            </div>
+            
+            <div class="dashboard-section">
+                <h4 style="color: var(--primary); font-size: 1.25rem; margin: 0 0 1.5rem 0; font-weight: 700;">🔍 Detailed Explanations</h4>
+                <div id="feedback-container"></div>
+            </div>
+
+            <div class="dashboard-section">
+                <h3 style="color: var(--primary); font-size: 1.25rem; margin: 0 0 0.5rem 0; font-weight: 700;">📖 Study Guide & Pronunciation</h3>
+                <p style="color: var(--text-muted); margin-bottom: 1.5rem; font-size: 0.95rem;">Click the speaker button to hear the correct native pronunciation of each modal verb.</p>
+                <div class="review-grid">
+                    <div class="review-item">
+                        <strong style="color:var(--primary); font-size:1.05rem;">Must / Mustn't</strong><br>
+                        <button class="speak-btn" onclick="pronounceModal('must, mustn\'t')">🔊 Listen</button>
+                        <p style="margin: 0.75rem 0 0 0; font-size: 0.9rem; color: var(--text-muted);">Used for strong obligations or prohibitions. Never use "to" after them, and never add "-s".</p>
+                    </div>
+                    <div class="review-item">
+                        <strong style="color:var(--primary); font-size:1.05rem;">Have to / Don't have to</strong><br>
+                        <button class="speak-btn" onclick="pronounceModal('have to, don\'t have to')">🔊 Listen</button>
+                        <p style="margin: 0.75rem 0 0 0; font-size: 0.9rem; color: var(--text-muted);">Used for rules and laws. The negative form means something is optional.</p>
+                    </div>
+                    <div class="review-item">
+                        <strong style="color:var(--primary); font-size:1.05rem;">Should / Shouldn't</strong><br>
+                        <button class="speak-btn" onclick="pronounceModal('should, shouldn\'t')">🔊 Listen</button>
+                        <p style="margin: 0.75rem 0 0 0; font-size: 0.9rem; color: var(--text-muted);">Used to give advice. Remember that the letter 'l' is silent when speaking.</p>
+                    </div>
+                    <div class="review-item">
+                        <strong style="color:var(--primary); font-size:1.05rem;">Might / May</strong><br>
+                        <button class="speak-btn" onclick="pronounceModal('might, may')">🔊 Listen</button>
+                        <p style="margin: 0.75rem 0 0 0; font-size: 0.9rem; color: var(--text-muted);">Used to talk about future possibilities or things that are not 100% certain.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>&copy; 2026 Academic Assessment Systems | Language Faculty Terminal Core</footer>
+
+    <script>
+        let currentStudent = "Guest";
+        let answersBL = { 1: "", 2: "", 3: "", 4: "", 5: "", 6: "" };
+        let answersAL = { 1: "", 2: "", 3: "" };
+        let finalScore = 0;
+        let evaluationReports = [];
+
+        function startLab() {
+            const name = document.getElementById('username-input').value.trim();
+            if(!name) return;
+            currentStudent = name;
+            document.getElementById('student-badge').innerText = "👤 Student Reference: " + currentStudent;
+            document.getElementById('login-overlay').style.display = "none";
+        }
+
+        function selectBL(qNum, val, element) {
+            const container = document.getElementById(`opts-bl${qNum}`);
+            container.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+            element.classList.add('selected');
+            answersBL[qNum] = val;
+        }
+
+        function selectAL(qNum, val, element) {
+            const container = document.getElementById(`opts-al${qNum}`);
+            container.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+            element.classList.add('selected');
+            answersAL[qNum] = val;
+        }
+
+        function checkBefore() {
+            const solutions = { 1: "don't have to", 2: "may", 3: "could", 4: "must", 5: "have to", 6: "should" };
+            const explanations = {
+                1: "Absence of necessity maps to 'don't have to'.",
+                2: "'May' is the correct formal choice for polite permission.",
+                3: "'Could' represents a past ability.",
+                4: "Logical deductions based on high factual certainty use 'must'.",
+                5: "External constraints or rules require 'have to'.",
+                6: "Friendly advice or recommendations use 'should'."
+            };
+
+            for(let i=1; i<=6; i++) {
+                const block = document.getElementById(`block-bl${i}`);
+                let chosenText = answersBL[i] || "Unselected";
+                
+                if(answersBL[i] === solutions[i]) {
+                    finalScore++;
+                    evaluationReports.push({ title: `Phase 1 - Question ${i}`, isCorrect: true, text: `Your answer was: "${chosenText}". Correct choice.` });
+                } else {
+                    evaluationReports.push({ title: `Phase 1 - Question ${i}`, isCorrect: false, text: `Your answer was: "${chosenText}". ${explanations[i]}` });
+                }
+                block.querySelectorAll('.option-btn').forEach(btn => btn.disabled = true);
+            }
+            document.getElementById('btn-validate-p1').disabled = true;
+            
+            // CORREGIDO: Forzar la activación directa del botón de audio de forma segura
+            document.getElementById('audio-hub').style.opacity = "1";
+            document.getElementById('audio-hub').style.pointerEvents = "auto";
+            
+            const playBtn = document.getElementById('play-btn');
+            playBtn.classList.add('ready');
+            
+            document.getElementById('sec-while').classList.remove('locked');
+        }
+
+        function playAudio() {
+            if (!('speechSynthesis' in window)) return;
+            window.speechSynthesis.cancel(); 
+            
+            const textBuffer = "Hey! You look so tired lately, you should definitely go to bed early tonight. As for me, I have to finish my university report right now. I could help you yesterday with your math tasks, but today, I am completely busy. Be very careful with your code, because you might make structural mistakes due to exhaustion. Seriously, you mustn't drink more coffee today, it is dangerous for your heart. Anyway, you don't have to ask for permission to use my laptop. Just grab it! Oh, remember that tomorrow we have to submit the project files before 8:00 AM. Professor Davis told us that we mustn't be late under any circumstance. I think we should double-check the bibliography just in case.";
+            
+            let voiceTrack = new SpeechSynthesisUtterance(textBuffer);
+            voiceTrack.lang = 'en-US';
+            voiceTrack.pitch = 1.0; 
+            voiceTrack.rate = 0.88; 
+            window.speechSynthesis.speak(voiceTrack);
+        }
+
+        function checkWhile() {
+            const wSol = { 1: "should", 2: "have to", 3: "could", 4: "might", 5: "mustn't", 6: "don't have to", 7: "have to", 8: "mustn't", 9: "should" };
+            for(let i=1; i<=9; i++) {
+                const el = document.getElementById(`wl-q${i}`);
+                let chosenText = el.value || "Empty";
+                if(el.value === wSol[i]) {
+                    finalScore++;
+                    evaluationReports.push({ title: `Phase 2 - Gap ${i}`, isCorrect: true, text: `Your answer was: "${chosenText}". Correct tracking.` });
+                } else {
+                    evaluationReports.push({ title: `Phase 2 - Gap ${i}`, isCorrect: false, text: `Your answer was: "${chosenText}". Sarah said explicitly '${wSol[i]}'.` });
+                }
+                el.disabled = true;
+            }
+            document.getElementById('btn-validate-p2').disabled = true;
+            document.getElementById('sec-after').classList.remove('locked');
+        }
+
+        function submitPhaseThree() {
+            // EVAL 1
+            let choice1 = answersAL[1] || "Unselected";
+            if(choice1 === 'C') {
+                finalScore++;
+                evaluationReports.push({ title: "Phase 3 - Question 1 (Should)", isCorrect: true, text: 'Your answer was: "C". Correct! Grammatically perfect: subject + should + bare infinitive verb.' });
+            } else {
+                let diagnostic = choice1 === 'A' ? "Option A is wrong because it uses 'should to advise' (Modals never take 'to')." : "Option B contains spelling issues ('shoud' lacks an 'l') and structure errors ('studyies' is wrong).";
+                if(choice1 === "Unselected") diagnostic = "No option selected.";
+                evaluationReports.push({ title: "Phase 3 - Question 1 (Should)", isCorrect: false, text: `Your answer was: "${choice1}". Incorrect. ${diagnostic}` });
+            }
+
+            // EVAL 2
+            let choice2 = answersAL[2] || "Unselected";
+            if(choice2 === 'A') {
+                finalScore++;
+                evaluationReports.push({ title: "Phase 3 - Question 2 (Mustn't)", isCorrect: true, text: 'Your answer was: "A". Correct! Flawless syntax structure.' });
+            } else {
+                let diagnostic = choice2 === 'B' ? "Option B has a grammar violation: 'mustnot to enter' includes an invalid 'to' particle." : "Option C is wrong because 'mustn't parks' adds an illegal third-person '-s' to the verb.";
+                if(choice2 === "Unselected") diagnostic = "No option selected.";
+                evaluationReports.push({ title: "Phase 3 - Question 2 (Mustn't)", isCorrect: false, text: `Your answer was: "${choice2}". Incorrect. ${diagnostic}` });
+            }
+
+            // EVAL 3
+            let choice3 = answersAL[3] || "Unselected";
+            if(choice3 === 'B') {
+                finalScore++;
+                evaluationReports.push({ title: "Phase 3 - Question 3 (Might)", isCorrect: true, text: 'Your answer was: "B". Correct! Perfect use of the base verb after the modal.' });
+            } else {
+                let diagnostic = choice3 === 'A' ? "Option A fails because 'migt' is a spelling mistake (lacks the letter 'h') and 'explains' has an ungrammatical '-s'." : "Option C maps an ungrammatical infinitive link ('might to travel').";
+                if(choice3 === "Unselected") diagnostic = "No option selected.";
+                evaluationReports.push({ title: "Phase 3 - Question 3 (Might)", isCorrect: false, text: `Your answer was: "${choice3}". Incorrect. ${diagnostic}` });
+            }
+
+            document.getElementById('btn-submit-p3').disabled = true;
+            document.querySelectorAll('#sec-after .option-btn').forEach(b => b.disabled = true);
+            document.getElementById('btn-dashboard-trigger').style.display = "block";
+        }
+
+        function pronounceModal(modalPhrase) {
+            if (!('speechSynthesis' in window)) return;
+            window.speechSynthesis.cancel();
+            let unit = new SpeechSynthesisUtterance(modalPhrase);
+            unit.lang = 'en-US';
+            unit.rate = 0.75; 
+            window.speechSynthesis.speak(unit);
+        }
+
+        function goToDashboard() {
+            document.getElementById('main-lab-container').style.display = "none";
+            document.getElementById('res-student-name').innerHTML = `<strong>Student Name:</strong> ${currentStudent}`;
+            document.getElementById('res-score').innerText = `Score: ${finalScore} / 18 Points`;
+
+            const container = document.getElementById('feedback-container');
+            container.innerHTML = "";
+            
+            evaluationReports.forEach(report => {
+                const card = document.createElement('div');
+                card.className = report.isCorrect ? "feedback-item good" : "feedback-item";
+                card.innerHTML = `<strong>${report.isCorrect ? '✓' : '✗'} ${report.title}</strong><br><p style="margin: 0.5rem 0 0 0; font-size:0.95rem; color:#475569;">${report.text}</p>`;
+                container.appendChild(card);
+            });
+
+            document.getElementById('results-dashboard').style.display = "block";
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
